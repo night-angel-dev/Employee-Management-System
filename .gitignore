@@ -1,0 +1,38 @@
+# Ignore config files with passwords
+# These usually contain 
+# Database passwords, API keys, secret token
+# Environment-specific settings (dev vs productions URLS)
+# Usernames and other credentials
+config.properties
+*.properties
+
+# Ignore IDE files
+
+# Projects build path, which JARs to include
+.classpath
+
+# Project metadate which java cersion to use
+.project
+
+# Personal preferences (code formatter, save actions, etc.) 
+.settings/
+
+# Compiled Java bytecode (the executable version of java files)
+# We ignore them because they are redundant, platform specific versions of java, 
+# clutters repos, version control friendly (git us btter with text source files than binary class files)
+*.class
+
+
+
+# Ignore build folders
+
+# Compiled .call files
+# Someimtes copied resources (images, config files)
+# The excecutable output of code compilation
+bin/
+
+# Intermediate compilatles files, final Jar/war files, temp files, reports
+build/
+
+# final deployable artificats, Jar fiels, ready for distribution, somtimes dependencies
+dist/

@@ -1,0 +1,2 @@
+DataBase folder should contain the following
+Database shema.sql
