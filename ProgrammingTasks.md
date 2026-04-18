@@ -3,9 +3,9 @@
 src/
     controller/
         AuthenticationController.java
-│   │   SearchController.java
-│   │   EmployeeManagementController.java
-│   │   ReportGenerator.java
+        SearchController.java
+        EmployeeManagementController.java
+        ReportGenerator.java
 
     model/
         User.java
