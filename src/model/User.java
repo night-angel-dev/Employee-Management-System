@@ -9,5 +9,32 @@ package model;
 */
 
 public class User {
-    
+    public enum Role {
+        HR_ADMIN,
+        GENERAL_EMPLOYEE
+    }
+
+    private int empID;
+    private String username;
+    private Role role;
+
+    public User(int empID, String username, Role role) {
+        this.empID = empID;
+        this.username = username;
+        this.role = role;
+    }
+
+    public int getempID() {
+        return empID;
+    }
+    public String getusername() {
+        return username;
+    }
+    public Role role() {
+        return role;
+    }
+
+    public String toString() {
+        return empID + "" + username + "" + role;
+    }
 }
