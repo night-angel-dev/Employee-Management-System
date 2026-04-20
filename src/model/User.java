@@ -35,6 +35,6 @@ public class User {
     }
 
     public String toString() {
-        return empID + "" + username + "" + role;
+        return empID + " " + username + " " + role;
     }
 }
