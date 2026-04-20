@@ -1,4 +1,6 @@
 package model;
+
+import java.util.Date;
 /**
  * Employe.java - 
  * Data container representing any employee record from the database. 
@@ -10,6 +12,7 @@ package model;
 public class Employee {
     private int empID, addressID;
     private String fname, lname, email, hiredate, SSN;
+    private Date hireDate;
     private double salary;
 
     public Employee(int empID, int addressID, String fname, String, lname, String email, String hiredate, String SSN, double salary) {
@@ -47,6 +50,8 @@ public class Employee {
     public double getsalary() {
         return salary;
     }
+
+    public void setSSN(String SSN) { this.SSN = SSN; }
 
     public String toString() {
         return empID + "," + fname + "," + lname + "," + email + "," +
