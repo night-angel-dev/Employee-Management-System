@@ -26,28 +26,28 @@ public class Employee {
         this.salary = salary;
     }
 
-    public int getempID() {
+    public int getEmpID() {
         return empID;
     }
-    public int getaddressID() {
+    public int getAddressID() {
         return addressID;
     }
-    public String getfname() {
+    public String getFname() {
         return fname;
     }
-    public String getlname() {
+    public String getLname() {
         return lname;
     }
-    public String getemail() {
+    public String getEmail() {
         return email;
     }
-    public Date gethiredate() {
+    public Date getHireDate() {
         return hireDate;
     }
     public String getSSN() {
         return SSN;
     }
-    public double getsalary() {
+    public double getSalary() {
         return salary;
     }
 

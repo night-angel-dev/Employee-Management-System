@@ -30,7 +30,7 @@ public class User {
     public String getusername() {
         return username;
     }
-    public Role role() {
+    public Role getRole() {
         return role;
     }
 
