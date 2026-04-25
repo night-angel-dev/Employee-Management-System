@@ -12,7 +12,7 @@ public class TestEmployeeManagement {
 
         EmployeeManagementController emc = new EmployeeManagementController(auth, dal);
 
-        // ✅ TEMP TEST (avoid constructor errors)
+        // TEMP TEST (avoid constructor errors)
         Employee emp = null;
 
         boolean result = emc.addEmployee(emp);

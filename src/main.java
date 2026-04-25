@@ -11,7 +11,7 @@ import controller.SearchController;
 import dao.DataAccessLayer;
 import view.UserInterface;
 
-public class Main {
+public class main {
 
     public static void main(String[] args) {
 
