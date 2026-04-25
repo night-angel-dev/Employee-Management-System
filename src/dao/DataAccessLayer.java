@@ -357,4 +357,67 @@ public class DataAccessLayer {
         
         return null; // Invalid credentials
     }
+
+    public int findOrCreateState(String stateAbbr) {
+        try {
+            String sql = "SELECT StateID FROM states WHERE state_abbreviation = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, stateAbbr.toUpperCase());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("StateID");
+
+            String insertSql = "INSERT INTO states (state_abbreviation) VALUES (?)";
+            PreparedStatement insert = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+            insert.setString(1, stateAbbr.toUpperCase());
+            insert.executeUpdate();
+            ResultSet keys = insert.getGeneratedKeys();
+            if (keys.next()) return keys.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error finding/creating state: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public int findOrCreateCity(String cityName) {
+        try {
+            String sql = "SELECT cityID FROM cities WHERE city_name = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, cityName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("cityID");
+
+            String insertSql = "INSERT INTO cities (city_name) VALUES (?)";
+            PreparedStatement insert = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+            insert.setString(1, cityName);
+            insert.executeUpdate();
+            ResultSet keys = insert.getGeneratedKeys();
+            if (keys.next()) return keys.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error finding/creating city: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public int insertAddress(String street, int cityID, int stateID, String zip,
+                             Date dob, String mobile, String emergName, String emergPhone) {
+        try {
+            String sql = "INSERT INTO addresses (street, cityID, stateID, zip, DOB, mobile_number, " +
+                         "emergency_contact_name, emergency_contact_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, street);
+            stmt.setInt(2, cityID);
+            stmt.setInt(3, stateID);
+            stmt.setString(4, zip);
+            stmt.setDate(5, dob);
+            stmt.setString(6, mobile);
+            stmt.setString(7, emergName);
+            stmt.setString(8, emergPhone);
+            stmt.executeUpdate();
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) return keys.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error inserting address: " + e.getMessage());
+        }
+        return -1;
+    }
 }

@@ -10,26 +10,24 @@ import java.sql.Date;
 import java.util.Collections;
 import java.util.List;
 import model.Employee;
-import model.User;
 
 public class ReportGenerator {
 
-    private final DataAccessLayer dal; // doesn't need to be changed
-    private final User currentUser; // doesn't need to be changed
+    private final DataAccessLayer dal;
+    private final AuthenticationController auth;
 
-    
-    public ReportGenerator(DataAccessLayer dal, User currentUser) {
-        this.dal = dal;
-        this.currentUser = currentUser;
+    public ReportGenerator(DataAccessLayer dal, AuthenticationController auth) {
+        this.dal  = dal;
+        this.auth = auth;
     }
 
     public List<String> getMyPayHistory() {
-        int empID = currentUser.getEmpID();
+        int empID = auth.getCurrentUser().getEmpID();
         return dal.getPayHistory(empID);
     }
 
     public List<String> getPayHistory(int empID) {
-        if (currentUser.getRole() == User.Role.HR_ADMIN) {
+        if (auth.isHRAdmin()) {
             return dal.getPayHistory(empID);
         }
         System.out.println("Access denied.");
@@ -37,7 +35,7 @@ public class ReportGenerator {
     }
 
     public double getTotalPayByJobTitle(int jobTitleId, int month, int year) {
-        if (currentUser.getRole() == User.Role.HR_ADMIN) {
+        if (auth.isHRAdmin()) {
             return dal.getMonthlyTotalPayByTitle(jobTitleId, month, year);
         }
         System.out.println("Access denied.");
@@ -45,7 +43,7 @@ public class ReportGenerator {
     }
 
     public double getTotalPayByDivision(int divID, int month, int year) {
-        if (currentUser.getRole() == User.Role.HR_ADMIN) {
+        if (auth.isHRAdmin()) {
             return dal.getMonthlyTotalPayByDivision(divID, month, year);
         }
         System.out.println("Access denied.");
@@ -53,7 +51,7 @@ public class ReportGenerator {
     }
 
     public List<Employee> getNewHiresByDateRange(Date start, Date end) {
-        if (currentUser.getRole() == User.Role.HR_ADMIN) {
+        if (auth.isHRAdmin()) {
             return dal.getNewHiresByDateRange(start, end);
         }
         System.out.println("Access denied.");
@@ -66,10 +64,13 @@ public class ReportGenerator {
         DataAccessLayer dal = new DataAccessLayer();
         dal.connect();
 
-        User adminUser = new User(1, "john.doe@companyz.com", User.Role.HR_ADMIN);
-        User empUser   = new User(2, "jane.smith@companyz.com", User.Role.GENERAL_EMPLOYEE);
-        ReportGenerator adminRG = new ReportGenerator(dal, adminUser);
-        ReportGenerator empRG   = new ReportGenerator(dal, empUser);
+        AuthenticationController adminAuth = new AuthenticationController(dal);
+        adminAuth.login("john.doe@companyz.com", "password123");
+        ReportGenerator adminRG = new ReportGenerator(dal, adminAuth);
+
+        AuthenticationController empAuth = new AuthenticationController(dal);
+        empAuth.login("jane.smith@companyz.com", "password123");
+        ReportGenerator empRG = new ReportGenerator(dal, empAuth);
 
         // Test 1: getMyPayHistory - own pay history as HR Admin
         System.out.println("Test 1: getMyPayHistory() as HR Admin (empID 1)");

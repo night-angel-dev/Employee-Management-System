@@ -1,28 +1,31 @@
 package view;
 
 import controller.*;
-import model.Employee;
-
+import dao.DataAccessLayer;
 import java.util.List;
 import java.util.Scanner;
+import model.Employee;
 
 public class UserInterface {
 
-    private AuthenticationController auth;
-    private SearchController search;
-    private EmployeeManagementController empMgmt;
-    private ReportGenerator reports;
+    private final AuthenticationController auth;
+    private final SearchController search;
+    private final EmployeeManagementController empMgmt;
+    private final ReportGenerator reports;
+    private final DataAccessLayer dal;
 
-    private Scanner sc;
+    private final Scanner sc;
 
     public UserInterface(AuthenticationController auth,
                          SearchController search,
                          EmployeeManagementController empMgmt,
-                         ReportGenerator reports) {
+                         ReportGenerator reports,
+                         DataAccessLayer dal) {
         this.auth = auth;
         this.search = search;
         this.empMgmt = empMgmt;
         this.reports = reports;
+        this.dal = dal;
         this.sc = new Scanner(System.in);
     }
 
@@ -177,9 +180,6 @@ public class UserInterface {
         System.out.print("Salary: ");
         double salary = getDoubleInput();
 
-        System.out.print("Address ID: ");
-        int addressID = getIntInput();
-
         System.out.print("SSN: ");
         String ssn = sc.nextLine();
 
@@ -188,6 +188,36 @@ public class UserInterface {
 
         System.out.print("Password: ");
         String password = sc.nextLine();
+
+        // Address fields a new address row is inserted and its generated ID is used
+        System.out.println("\n-- Address Details --");
+        System.out.print("Street: ");
+        String street = sc.nextLine();
+
+        System.out.print("City: ");
+        String cityName = sc.nextLine();
+
+        System.out.print("State (2-letter abbreviation, e.g. CA): ");
+        String stateAbbr = sc.nextLine();
+
+        System.out.print("Zip Code: ");
+        String zip = sc.nextLine();
+
+        System.out.print("Date of Birth (YYYY-MM-DD): ");
+        java.sql.Date dob = java.sql.Date.valueOf(sc.nextLine());
+
+        System.out.print("Mobile Number: ");
+        String mobile = sc.nextLine();
+
+        System.out.print("Emergency Contact Name: ");
+        String emergName = sc.nextLine();
+
+        System.out.print("Emergency Contact Phone: ");
+        String emergPhone = sc.nextLine();
+
+        int cityID    = dal.findOrCreateCity(cityName);
+        int stateID   = dal.findOrCreateState(stateAbbr);
+        int addressID = dal.insertAddress(street, cityID, stateID, zip, dob, mobile, emergName, emergPhone);
 
         return new Employee(
             0,
