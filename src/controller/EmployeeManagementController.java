@@ -5,39 +5,48 @@ import model.Employee;
 
 public class EmployeeManagementController {
 
-    private DataAccessLayer dal;
     private AuthenticationController auth;
+    private DataAccessLayer dal;
 
-    public EmployeeManagementController(DataAccessLayer dal, AuthenticationController auth) {
-        this.dal = dal;
+    public EmployeeManagementController(AuthenticationController auth, DataAccessLayer dal) {
         this.auth = auth;
+        this.dal = dal;
     }
 
     private boolean isHRAdmin() {
+        return auth != null && auth.isHRAdmin();
+    }
+
+    // ➕ Add Employee
+    public boolean addEmployee(Employee emp) {
+        if (!isHRAdmin()) {
+            System.out.println("Access denied.");
+            return false;
+        }
+
+        dal.insertEmployee(emp); 
+        return true;             
+    }
+
+    // ✏️ Update Employee
+    public boolean updateEmployee(int empID, Employee newData) {
+        if (!isHRAdmin()) {
+            System.out.println("Access denied.");
+            return false;
+        }
+
+        dal.updateEmployee(empID, newData);
         return true;
     }
 
-    public void addEmployee(Employee emp) {
+    // ❌ Delete Employee
+    public boolean deleteEmployee(int empID) {
         if (!isHRAdmin()) {
-            System.out.println("Access denied");
-            return;
+            System.out.println("Access denied.");
+            return false;
         }
-        dal.insertEmployee(emp);
-    }
 
-    public void updateEmployee(int empID, Employee newData) {
-        if (!isHRAdmin()) {
-            System.out.println("Access denied");
-            return;
-        }
-        dal.updateEmployee(empID, newData);
-    }
-
-    public void deleteEmployee(int empID) {
-        if (!isHRAdmin()) {
-            System.out.println("Access denied");
-            return;
-        }
         dal.deleteEmployee(empID);
+        return true;
     }
 }
