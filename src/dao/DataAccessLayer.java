@@ -185,12 +185,18 @@ public class DataAccessLayer {
             stmt.setInt(1, empID);
             stmt.executeUpdate();
 
-            // Clean up orphaned address row
+            // Only delete address if no other employee still references it
             if (addressID > 0) {
-                PreparedStatement addrStmt = conn.prepareStatement(
-                    "DELETE FROM addresses WHERE addressID=?");
-                addrStmt.setInt(1, addressID);
-                addrStmt.executeUpdate();
+                PreparedStatement refCheck = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM employees WHERE addressID=?");
+                refCheck.setInt(1, addressID);
+                ResultSet refRs = refCheck.executeQuery();
+                if (refRs.next() && refRs.getInt(1) == 0) {
+                    PreparedStatement addrStmt = conn.prepareStatement(
+                        "DELETE FROM addresses WHERE addressID=?");
+                    addrStmt.setInt(1, addressID);
+                    addrStmt.executeUpdate();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

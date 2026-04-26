@@ -64,6 +64,7 @@ public class SearchController {
         dal.connect();
         AuthenticationController auth = new AuthenticationController(dal);
         SearchController sc = new SearchController(auth, dal);
+        
         // Test 1: searchByEmpID as HR Admin (full data visible)
         System.out.println("Test 1: searchByEmpID(1) as HR Admin");
         auth.login("john.doe@companyz.com", "password123");
