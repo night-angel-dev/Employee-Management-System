@@ -49,22 +49,32 @@ public class UserInterface {
         }
     }
 
-    // login flow
+    // login flow - re-prompts on failure until user cancels or succeeds
     private void loginFlow() {
-        System.out.print("Username: ");
-        String username = sc.nextLine();
+        while (true) {
+            System.out.print("Username: ");
+            String username = sc.nextLine();
 
-        System.out.print("Password: ");
-        String password = sc.nextLine();
+            System.out.print("Password: ");
+            String password = sc.nextLine();
 
-        if (auth.login(username, password)) {
-            if (auth.isHRAdmin()) {
-                hrMenu();
-            } else {
-                employeeMenu();
+            if (auth.login(username, password)) {
+                if (auth.isHRAdmin()) {
+                    hrMenu();
+                }
+                else {
+                    employeeMenu();
+                } 
+                return;
             }
-        } else {
-            System.out.println("Login failed.");
+
+            System.out.println("Login failed. Try again? (y/n): ");
+            
+            String response = sc.nextLine().trim();
+            
+            if (!response.equalsIgnoreCase("y")) {
+                return;  // Exit if user didn't type 'y' or 'Y'
+            }
         }
     }
 
@@ -118,7 +128,8 @@ public class UserInterface {
             System.out.println("3. Update Employee");
             System.out.println("4. Delete Employee");
             System.out.println("5. View Any Pay History");
-            System.out.println("6. Logout");
+            System.out.println("6. Salary Update by Percentage (Multiple Employees)");
+            System.out.println("7. Logout");
 
             int choice = getIntInput();
 
@@ -129,6 +140,15 @@ public class UserInterface {
                     String name = sc.nextLine();
                     List<Employee> results = search.searchByName(name);
                     results.forEach(System.out::println);
+
+                    if (!results.isEmpty()) {
+                        System.out.print("Enter employee ID to update (0 to skip): ");
+                        int selectedID = getIntInput();
+                        
+                        if (selectedID != 0) { 
+                            updateEmployeeFlow(selectedID);
+                        }
+                    }
                     break;
 
                 case 2:
@@ -137,25 +157,28 @@ public class UserInterface {
                     break;
 
                 case 3:
-                    System.out.print("Enter Employee ID to update: ");
-                    int updateID = getIntInput();
-                    Employee updatedEmp = createEmployeeInput();
-                    empMgmt.updateEmployee(updateID, updatedEmp);
+                    updateEmployeeFlow();
                     break;
 
                 case 4:
-                    System.out.print("Enter Employee ID to delete: ");
-                    int deleteID = getIntInput();
-                    empMgmt.deleteEmployee(deleteID);
+                    deleteEmployeeFlow();
                     break;
 
                 case 5:
-                    System.out.print("Enter Employee ID: ");
-                    int empID = getIntInput();
-                    reports.getPayHistory(empID).forEach(System.out::println);
+                    viewPayHistoryMenu();
                     break;
 
                 case 6:
+                    System.out.print("Percentage increase (e.g. 5 for 5%): ");
+                    double percent = getDoubleInput();
+                    System.out.print("Min salary: ");
+                    double minSalary = getDoubleInput();
+                    System.out.print("Max salary: ");
+                    double maxSalary = getDoubleInput();
+                    empMgmt.updateSalaryByPercentage(percent, minSalary, maxSalary);
+                    break;
+
+                case 7:
                     auth.logout();
                     return;
 
@@ -231,6 +254,115 @@ public class UserInterface {
             username,
             password
         );
+    }
+
+    // Update a single field on an existing employee
+    private void updateEmployeeFlow() {
+        System.out.print("Enter Employee ID to update: ");
+        updateEmployeeFlow(getIntInput());
+    }
+
+    private void updateEmployeeFlow(int empID) {
+        Employee current = search.searchByEmpID(empID);
+        if (current == null) return;
+
+        System.out.println("\nCurrent record: " + current);
+
+        boolean done = false;
+        while (!done) {
+            System.out.println("\nWhich field would you like to update?");
+            System.out.println("1. First Name  (current: " + current.getFname() + ")");
+            System.out.println("2. Last Name   (current: " + current.getLname() + ")");
+            System.out.println("3. Email       (current: " + current.getEmail() + ")");
+            System.out.println("4. Salary      (current: " + current.getSalary() + ")");
+            System.out.println("5. SSN         (current: " + current.getSSN() + ")");
+            System.out.println("6. Username    (current: " + current.getUsername() + ")");
+            System.out.println("7. Password");
+            System.out.println("8. Save and exit");
+
+            switch (getIntInput()) {
+                case 1: System.out.print("New First Name: ");  current.setFname(sc.nextLine());    break;
+                case 2: System.out.print("New Last Name: ");   current.setLname(sc.nextLine());    break;
+                case 3: System.out.print("New Email: ");       current.setEmail(sc.nextLine());    break;
+                case 4: System.out.print("New Salary: ");      current.setSalary(getDoubleInput()); break;
+                case 5: System.out.print("New SSN: ");         current.setSSN(sc.nextLine());      break;
+                case 6: System.out.print("New Username: ");    current.setUsername(sc.nextLine()); break;
+                case 7: System.out.print("New Password: ");    current.setPassword(sc.nextLine()); break;
+                case 8: done = true; break;
+                default: System.out.println("Invalid option.");
+            }
+        }
+        empMgmt.updateEmployee(empID, current);
+    }
+
+    // Show employee record and ask for confirmation before deleting
+    private void deleteEmployeeFlow() {
+        System.out.print("Enter Employee ID to delete: ");
+        int empID = getIntInput();
+        Employee toDelete = search.searchByEmpID(empID);
+       
+        if (toDelete == null) return;
+
+        System.out.println("\nEmployee record:");
+        System.out.println(toDelete);
+        System.out.print("Are you sure you want to delete this employee? (y/n): ");
+        
+        if (sc.nextLine().trim().equalsIgnoreCase("y")) {
+            empMgmt.deleteEmployee(empID);
+        } 
+        else {
+            System.out.println("Delete cancelled.");
+        }
+    }
+
+    // Pay history sub-menu covering all four report methods
+    private void viewPayHistoryMenu() {
+        while (true) {
+            System.out.println("\n--- Pay History Reports ---");
+            System.out.println("1. Pay History for Employee");
+            System.out.println("2. Total Pay by Job Title");
+            System.out.println("3. Total Pay by Division");
+            System.out.println("4. New Hires by Date Range");
+            System.out.println("5. Back");
+
+            switch (getIntInput()) {
+                case 1:
+                    System.out.print("Enter Employee ID: ");
+                    reports.getPayHistory(getIntInput()).forEach(System.out::println);
+                    break;
+                case 2:
+                    System.out.print("Job Title ID: ");
+                    int jobTitleId = getIntInput();
+                    System.out.print("Month (1-12): ");
+                    int jtMonth = getIntInput();
+                    System.out.print("Year (e.g. 2024): ");
+                    int jtYear = getIntInput();
+                    System.out.printf("Total Pay: $%.2f%n", reports.getTotalPayByJobTitle(jobTitleId, jtMonth, jtYear));
+                    break;
+                case 3:
+                    System.out.print("Division ID: ");
+                    int divID = getIntInput();
+                    System.out.print("Month (1-12): ");
+                    int divMonth = getIntInput();
+                    System.out.print("Year (e.g. 2024): ");
+                    int divYear = getIntInput();
+                    System.out.printf("Total Pay: $%.2f%n", reports.getTotalPayByDivision(divID, divMonth, divYear));
+                    break;
+                case 4:
+                    System.out.print("Start Date (YYYY-MM-DD): ");
+                    java.sql.Date start = java.sql.Date.valueOf(sc.nextLine());
+                    System.out.print("End Date (YYYY-MM-DD): ");
+                    java.sql.Date end = java.sql.Date.valueOf(sc.nextLine());
+                    List<Employee> hires = reports.getNewHiresByDateRange(start, end);
+                    System.out.println("New hires found: " + hires.size());
+                    hires.forEach(System.out::println);
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
     }
 
     // Input Helpers

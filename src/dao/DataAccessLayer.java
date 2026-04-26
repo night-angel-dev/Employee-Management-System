@@ -117,7 +117,8 @@ public class DataAccessLayer {
 
     public void insertEmployee(Employee emp) {
         try {
-            String sql = "INSERT INTO employees (Fname, Lname, email, HireDate, Salary, SSN, addressID, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";            PreparedStatement stmt = conn.prepareStatement(sql);
+            String sql = "INSERT INTO employees (Fname, Lname, email, HireDate, Salary, SSN, addressID, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";            
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, emp.getFname());
             stmt.setString(2, emp.getLname());
@@ -174,10 +175,23 @@ public class DataAccessLayer {
 
     public void deleteEmployee(int empID) {
         try {
+            // Capture addressID before deleting the FK has no ON DELETE CASCADE
+            int addressID = -1;
+            Employee emp = findEmployeeById(empID);
+            if (emp != null) addressID = emp.getAddressID();
+
             String sql = "DELETE FROM employees WHERE empID=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, empID);
             stmt.executeUpdate();
+
+            // Clean up orphaned address row
+            if (addressID > 0) {
+                PreparedStatement addrStmt = conn.prepareStatement(
+                    "DELETE FROM addresses WHERE addressID=?");
+                addrStmt.setInt(1, addressID);
+                addrStmt.executeUpdate();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -40,6 +40,16 @@ public class EmployeeManagementController {
         return true;
     }
 
+    // Salary update by percentage within a salary range for multiple employees
+    public boolean updateSalaryByPercentage(double percent, double min, double max) {
+        if (!isHRAdmin()) {
+            System.out.println("Access denied.");
+            return false;
+        }
+        dal.updateSalaryByPercentage(percent, min, max);
+        return true;
+    }
+
     // Delete Employee
     public boolean deleteEmployee(int empID) {
         if (!isHRAdmin()) {
