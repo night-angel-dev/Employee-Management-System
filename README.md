@@ -12,8 +12,8 @@ A role-based employee management system with HR Admin and Employee portals. Orig
 
 | Document                 | Google Docs                                                                                                                                                | PDF (Repo)                                |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Software Design Document | [View on Google Docs](https://drive.google.com/file/d/1059am8DYuQal34lb6Q8NK7_tFOh4BG4Q/view?usp=sharing)                                                  | [Download](/docs/SDD-DevOpsDynasty.pdf)  |
-| User Story Task Document | [View on Google Docs](https://docs.google.com/document/d/1f8pj1QDKIFnflCI1rWLeREG18Cl8ajLx/edit?usp=sharing&ouid=117099564227884055012&rtpof=true&sd=true) | [Download](/docs/user-stories-tasks.pdf) |
+| Software Design Document | [View on Google Docs](https://drive.google.com/file/d/1059am8DYuQal34lb6Q8NK7_tFOh4BG4Q/view?usp=sharing)                                                  | [Download](/docs/Sofware_Design_Document.pdf)  |
+| User Story Task Document | [View on Google Docs](https://docs.google.com/document/d/1f8pj1QDKIFnflCI1rWLeREG18Cl8ajLx/edit?usp=sharing&ouid=117099564227884055012&rtpof=true&sd=true) | [Download](/docs/CSc3350group-team-project_SP26-1.pdf) |
 
 
 ## Improvents by Me
