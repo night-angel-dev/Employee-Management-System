@@ -16,7 +16,7 @@ A role-based employee management system with HR Admin and Employee portals. Orig
 | User Story Task Document | [View on Google Docs](https://docs.google.com/document/d/1f8pj1QDKIFnflCI1rWLeREG18Cl8ajLx/edit?usp=sharing&ouid=117099564227884055012&rtpof=true&sd=true) | [Download](/docs/CSc3350group-team-project_SP26-1.pdf) |
 
 
-## Improvents by Me
+## Improvements by Me
 - [x] Software Design Document added to repository
 - [x] Improved error handling and validation
 - [x] Professional README with setup instructions
@@ -57,3 +57,37 @@ Due to uneven team participation, I served as the **de facto lead** - a role I s
 1. Clone the repository
 ```bash
 git clone https://github.com/night-angel-dev/Employee-Management-System.git
+```
+2. Configure database connection
+- Edit config.properties with your database credentials
+
+3. Run the application
+```bash
+javac -cp "lib/mysql-connector-j-9.1.0.jar" -d src src/model/*.java src/dao/*.java src/controller/*.java src/view/*.java src/main.java
+java -cp "src;lib/mysql-connector-j-9.1.0.jar" main
+```
+
+
+## Database Options
+
+- Aiven (cloud): Use for team access
+- Local MySQL: Use for solo development
+
+
+## Modes
+
+- Console mode: Original implementation (working)
+- GUI mode: In development
+
+
+## Lessons Learned
+
+- Good architecture enables parallel work, even when team collaboration fails
+- Always establish contribution expectations and communication guidelines early
+- A shared online database (Aiven) significantly reduces integration headaches
+- Being the responsible person on a team means sometimes doing more than your share
+
+
+## License
+
+Academic project - for portfolio purposes only
