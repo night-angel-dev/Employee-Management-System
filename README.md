@@ -24,7 +24,7 @@ A role-based employee management system with HR Admin and Employee portals. Orig
 - [ ] Additional reporting features (planned)
 
 
-## My Roles
+## My Role
 
 Due to uneven team participation, I served as the **de facto lead** - a role I stepped into to ensure project completion.
 
@@ -32,7 +32,7 @@ Due to uneven team participation, I served as the **de facto lead** - a role I s
 - Wrote the complete Software Design Document and programming tasks
 - Defined and documented all test cases
 - Created and managed the shared online database (Aiven)
-- Debugged and completed partial work from team members (DataAccessLayer and 2-3 other files)
+- Debugged and completed work that had issues or was only partially finished from team members (DataAccessLayer and 2-3 other files)
 - Added missing functions, imports, and validation logic
 - Drove all communication and coordination
 - Completed the following files I was responsible for: AuthenticationController.java, Main.java
